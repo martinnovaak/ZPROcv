@@ -1,5 +1,4 @@
 #include <iostream>
-#include "Header.h"
 #include <limits.h> // knihovna obsahujici makra INT_MAX SHRT_MIN apod.
 #include <limits>   // knihovna obsahujici tridu numeric_limits
 #include <string>
