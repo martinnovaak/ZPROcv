@@ -5,33 +5,65 @@ using namespace std;
 
 void vytvor(Seznam& s)
 {
-	s.hlava = s.ocas = nullptr;
+	s.hlava = s.ocas = nullptr; // po vytvoreni je seznam prazdny -> hlava i ocas ukazuji na nullptr
 }
 
+
+// seznam je prazdny prave tehdy ukazuje-li hlava na nullptr
+bool prazdny(Seznam& s)
+{
+	return s.hlava == nullptr; 
+}
+
+
+// Pri vlozeni na zacatek dochazi ke trem krocim:
+// 1) Vytvorime novy prvek, ktery pujde na zacatek seznamu => jeho nasledovnik musi byt aktualne prvni prvek
+// 2) Novy prvek je nova hlava (novy prvni prvek)
+// 3) byl-li predtim seznam prazdny (ocas ukazuje na nullptr) je novy prvek novy posledni prvek 
 void vloz_na_zacatek(Seznam& s, Data co)
 {
-	Prvek* pom = new Prvek{ co, s.hlava };
+	// 1)
+	/*  Druhy pristup inicializace noveho prvku pomoci operatoru ->
+	Prvek* pom = new Prvek;
+	pom->data = co;
+	pom->dalsi = s.hlava;
+	*/
+	Prvek* pom = new Prvek{ co, s.hlava }; 
+	// 2)
 	s.hlava = pom;
+	// 3)
 	if (s.ocas == nullptr)
-		s.ocas = s.hlava;
+		s.ocas = s.hlava; // s.ocas = pom;
 }
 
+
+// Vkladani na konec:
+// 1a) Je-li na zacatku seznam prazdny je vkladani na konec to same jako vkladani na zacatek => zavolame tedy jiz nami implementovanou funkci
+// 1b) Jinak:
+//		2) Vytvorime novy posledni prvek (jeho naslednik je nullptr)
+//		3) novy prvek je novym ocasem (je naslednik aktualne posledniho prvku a zaroven na nej ukazuje ocas)
 void vloz_na_konec(Seznam& s, Data co)
 {
-	if (!prazdny(s))
-	{
-		Prvek* pom = new Prvek{ co, nullptr };
-		s.ocas->dalsi = pom;
-		s.ocas = s.ocas->dalsi;
-	}
-	else 
+	if (prazdny(s)) // 1a)
 	{
 		vloz_na_zacatek(s, co);
 	}
+	else //1b)
+	{
+		// 2)
+		Prvek* pom = new Prvek{ co, nullptr };
+		// 3)
+		s.ocas->dalsi = pom;
+		s.ocas = s.ocas->dalsi;
+	}
 }
 
+
+// Vypis seznamu:
+// iteruju od prvniho prvku (hlava) az po posledni prvek seznamu (ocas) a u kazdeho prvku vypisi jeho data
 void vypis(Seznam& s)
 {
+	// Zpusob pres prikaz while
 	/*
 	Prvek* pom = s.hlava;
 	while (pom != nullptr)
@@ -42,6 +74,7 @@ void vypis(Seznam& s)
 	cout << endl;
 	*/
 
+	// Zpusob pres cyklus for
 	for (Prvek* pom = s.hlava; pom != nullptr; pom = pom->dalsi)
 	{
 		cout << pom->data << ", ";
@@ -49,21 +82,53 @@ void vypis(Seznam& s)
 	cout << endl;
 }
 
+// Odstraneni prvniho prkvu seznamu
+// 1) Prvek odstranuji pouze tehdy neni-li seznam prazdny
+// 2) ulozim si ukazatel na novy prvni prvek (naslednika hlavy)
+// 3) tento prvek je nove hlavou
+// 4) smazu "byvaly" prvni prvek 
 void odstran_prvni(Seznam& s)
 {
-	if (!prazdny(s))
+	if (!prazdny(s)) // 1)
 	{
+		// 2)
 		Prvek* pom = s.hlava;
+		// 3)
 		s.hlava = s.hlava->dalsi;
+		// 4)
 		delete pom;
 	}
 }
 
-bool prazdny(Seznam& s)
+// Odstran posledni prvek seznamu:
+// 1) Je-li seznam prazdny => skonci (neni co mazat)
+// 2) Ma-li seznam pouze jeden prvek (tedy hlava i ocas ukazuji na stejny prvek) => odstran prvni prvek a skonci
+// 3) Jinak:
+//	   a) do pomocne promenne uloz predposledni prvek seznamu (predka ocasu), je potreba k nemu doiterovat
+//     b) smaz posledni prvek (naslednika predposledniho)
+//     c) predposledni prvek je nove poslednim (ocasem)
+void odstran_posledni(Seznam& s)
 {
-	return s.hlava == nullptr;
+	if (prazdny(s)) // 1)
+		return;
+	else if (s.hlava == s.ocas) // 2)
+		odstran_prvni(s);
+	else // 3)
+	{
+		// a
+		Prvek* pom = s.hlava;
+		while (pom->dalsi != s.ocas)
+			pom = pom->dalsi;
+		// b)
+		delete pom->dalsi;
+		pom->dalsi = nullptr;
+		// c)
+		s.ocas = pom;
+	}
 }
 
+
+// Seznam vyprazdnim tak, ze budu ze seznamu odstranovat prvni prvek, dokud nebude seznam prazdny
 void vyprazdni(Seznam& s)
 {
 	while (!prazdny(s))
@@ -72,98 +137,142 @@ void vyprazdni(Seznam& s)
 	}
 }
 
+// v pripade seznamu bez zarazky splyva zruseni seznamu s vyprazdnenim
+// (pokud bychom meli seznam se zarazkou, ve fci zrus bychom navic museli odstranit zarazku, ktera se ve fci vyprazdni nemaze)
 void zrus(Seznam& s)
 {
 	vyprazdni(s);
 }
 
+// Najdi prvek s danou hodnotou:
+// 1) do pomocneho ukazatele uloz prvni prvek
+// 2) koukej na data v prvcich seznamu, dokud nejsi a) na konci seznamu nebo b) nenajdes prvek s hledanou hodnotou
+// 3) vrat pomocny ukazatel (v pripade, ze se prvek s hledanou hodnotou v seznamu nenachazi vrati fce nullptr)
 Prvek* najdi(Seznam& s, Data hodnota)
 {
+	// 1)
 	Prvek* pom = s.hlava;
+	// 2)
 	while (pom != nullptr && pom->data != hodnota)
 	{
-		//if (pom->data = hodnota)
+		//if (pom->data == hodnota)
 		//	return pom;
 		pom = pom->dalsi;
 	}
+	// 3)
 	return pom;
 }
 
+
+// Odstran prvek za prvkem predek:
+// 1) Je-li mazany prvek (naslednik predka) poslednim prvkem => odstran posledni prvek a skonci
+// Jinak:
+// 2) uloz si do pomocne promenne ukazatel na mazany prvek (naslednika predka)
+// 3) novy naslednik predka je naslednik mazaneho prvku (naslednik naslednika predka)
+// 4) odstran mazany prvek
 void odstran_za(Seznam& s, Prvek* predek)
 {
+	// 1)
+	if (predek->dalsi == s.ocas)
+	{
+		odstran_posledni(s);
+		return; // skonci
+	}
+
+	// 2)
 	Prvek* pom = predek->dalsi;
+	// 3)
 	predek->dalsi = pom->dalsi;
-
-	if (pom == s.ocas)
-		s.ocas = predek;
-
+	// 4)
 	delete pom;
 }
 
+// odstran dany prvek:
+// 1) Je-li mazany prvek prvnim prvkem seznamu (hlavou) => smaz prvni prvek a skonci
+// 2) Je-li mazany prvek poslednim prvkem seznamu (ocasem) => smaz posledni prvek a skonci
+// 3) Jinak:
+//	   a) vymen data v mazanym prvku za data v naslednikovi mazanyho prvku (tedy nove mazany prvek je naslednikem puvodne mazaneho prvku)
+//	   b) odstran naslednika puvodne mazaneho prvku
 void odstran(Seznam& s, Prvek* ten)
 {
-	if (ten == s.hlava)
+	if (ten == s.hlava) // 1)
 		odstran_prvni(s);
-	else if (ten == s.ocas)
+	else if (ten == s.ocas) // 2)
 		odstran_posledni(s);
-	else
+	else  // 3)
 	{
+		// a)
 		Data d = ten->dalsi->data;
 		ten->dalsi->data = ten->data;
 		ten->data = d;
+		// b)
 		odstran_za(s, ten);
 	}
 }
 
-void odstran_posledni(Seznam& s)
-{
-	if (prazdny(s))
-		return;
-	else if (s.hlava == s.ocas)
-		odstran_prvni(s);
-	else 
-	{
-		Prvek* pom = s.hlava;
-		while (pom->dalsi != s.ocas)
-			pom = pom->dalsi;
-		delete pom->dalsi;
-		pom->dalsi = nullptr;
-	}
-}
-
+// Vloz novy prvek za dany prvek (predka):
+// 1) Vytvor novy prvek (naslednik noveho prvku je aktualni naslednik predka)
+// 2) novy prvek je novym naslednikem predka
+// 3) byl-li puvodne predek poslednim prvkem, je novy prvkem nove poslednim prvkem (ocasem)
 void vloz_za(Seznam& s, Data co, Prvek* predek)
 {
+	// 1)
 	Prvek* pom = new Prvek{ co, predek->dalsi };
+	// 2)
 	predek->dalsi = pom;
+	// 3)
 	if (predek == s.ocas)
 		s.ocas = s.ocas->dalsi;
 }
 
+// Najdi prvek s nejmensi hodnotou v seznamu:
+// 1) Vytvor si pomocny prvek predstavvujici nejmensi prvek a uloz do nej prvni prvek seznamu (hlavu)
+// 2) Iteruj skrz vsechny prvky seznamu (od 2. prvku)
+// 3) Je-li prvek v dane iteraci mensi nez dosavadni nejmensi => je dany prvek novy nejmensi prvek
+// 4) Po skonceni cyklu vrat nejmensi prvek seznamu
 Prvek* najdi_nejmensi(Seznam& s)
 {
+	// 1) 
 	Prvek* nejmensi = s.hlava;
+	// 2)
 	for (Prvek* pom = s.hlava->dalsi; pom != nullptr; pom = pom->dalsi)
 	{
-		if (nejmensi->data > pom->data)
+		if (nejmensi->data > pom->data) // 3)
 		{
 			nejmensi = pom;
 		}
 	}
+	// 4)
 	return nejmensi;
 }
 
+// Seznam budeme serazovat nasledujicim zpusobem:
+// 1) Nema cenu serazovat prazdny seznam, nebo seznam s jednim prvkem
+// 2) Vytvorime si pomocny novy pomocny seznam
+// 3) Dokud nebude puvodni seznam prazdny tak:
+//		a) Vzdy najdeme nejmensi prvek v puvodnim seznamu
+//	    b) ten vlozime na konec noveho usporadaneho seznamu
+//      c) a nasledne ho z puvodniho seznamu smazeme (tim zabranime zacykleni)
+// 4) Po skonceni cyklu je puvodni seznam prazdny a pomocny seznam je usporadany od nejmensiho po nejvetsi zmenime tedy ukazatele
+//		puvodniho seznamu na pomocny usporadany seznam
 void serad(Seznam& s)
 {
-	if (prazdny(s) || s.hlava == s.ocas)
+	if (prazdny(s) || s.hlava == s.ocas) // 1)
 		return;
+	// 2)
 	Seznam us;
 	vytvor(us);
-	while (!prazdny(s))
+	// 3)
+	while (!prazdny(s)) 
 	{
+		// a)
 		Prvek* pom = najdi_nejmensi(s);
+		// b)
 		vloz_na_konec(us, pom->data);
+		// c)
 		odstran(s, pom);
 	}
+	// 4) 
 	s.hlava = us.hlava;
 	s.ocas = us.ocas;
 }
@@ -216,6 +325,7 @@ Seznam prekopiruj(const ChytrePole& k)
 }
 // max 0,3 bodu
 
+
 // Implementujte funkci, ktera vrati kopii seznamu
 Seznam prekopiruj(const Seznam& s)
 {
@@ -228,6 +338,14 @@ Seznam prekopiruj(const Seznam& s)
 }
 // max 0,3 bodu
 
+
+// Implementujte funkci, ktera zkontroluje zda-li seznam neni palindrom
+// Vhodne vyuzijte jiz naprogramovanych predchozich funkci z ukolu
+bool palindrom(const Seznam& s)
+{
+	return false;
+}
+// max 0,4 bodu
 
 
 // Josefuv problem 
