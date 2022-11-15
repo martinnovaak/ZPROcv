@@ -56,7 +56,7 @@ void serad(Seznam& s);					   // Funkce pro serazeni seznamu od nejmensiho po ne
 // DU8
 int velikost(const Seznam& s);
 void otoc_seznam(Seznam& s);
-void smaz_prvky_prvky(Seznam& s);
+void smaz_opakovane_prvky(Seznam& s);
 Seznam prekopiruj(const ChytrePole& k);
 Seznam prekopiruj(const Seznam& s);
 bool palindrom(const Seznam& s);

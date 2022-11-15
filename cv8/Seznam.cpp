@@ -304,7 +304,7 @@ void otoc_seznam(Seznam& s)
 
 // implementujte funkci, ktera vymaze opakujici se prvky
 // po pouziti fce bude seznam 5 ->  3 -> 5 -> 1 -> 1 -> 3 -> 4 -> 2 -> 1 nullptr vypadat nasledovne: 5 -> 3 -> 1 -> 4 -> 2 -> nullptr
-void smaz_prvky_prvky(Seznam& s)
+void smaz_opakovane_prvky(Seznam& s)
 {
 	/*
 	TODO
