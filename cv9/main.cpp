@@ -36,6 +36,7 @@ string prvociselny_rozklad(int n)
 {
 	return "";
 }
+// max 0,5 bodu
 //_______________________________________________________
 
 /*
