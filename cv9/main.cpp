@@ -34,10 +34,7 @@ int josef_rekurzivne(unsigned int n)
 // kdyz zadam napr cislo n = 30 tak funkce vrati string ve tvaru "2*3*5"
 string prvociselny_rozklad(int n)
 {
-	for (int i = 2; i * i < n; i++)
-		if (n % i == 0)
-			return to_string(i) + "*" + prvociselny_rozklad(n / i);
-	return to_string(n);
+	return "";
 }
 //_______________________________________________________
 
