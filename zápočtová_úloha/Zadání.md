@@ -7,7 +7,7 @@ Napište spojový seznam pro prvek s obecnou datovou složkou typu <b>T</b>.
 
 -   <b>konstruktor 0,5b </b> - povinné
 
--   konstruktor přes initializer_list
+-   konstruktor přes initializer_list <b>1</b>
 
 -   kopírovací konstruktor <b>1b</b>
 
