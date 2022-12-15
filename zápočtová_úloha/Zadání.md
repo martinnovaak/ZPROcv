@@ -7,6 +7,8 @@ Napište spojový seznam pro prvek s obecnou datovou složkou typu <b>T</b>.
 
 -   <b>konstruktor 0,5b </b> - povinné
 
+-   konstruktor přes initializer_list
+
 -   kopírovací konstruktor <b>1b</b>
 
 -   <b> destruktor 1b</b> - povinné
@@ -91,8 +93,7 @@ Podmínky k udělení zápočtu
 Podmínkou k udělení zápočtu je zisk alespoň 20 bodů. K bodům ze
 zápočtové úlohy Vám budou přičteny body z domácích úloh.
 
-Na vypracování zápočtové úlohy máte čas do konce letního zkouškového
-období.
+Zápočtovou úlohu odevzdejte nejlépe do konce zimního zkouškového období (ještě lépe do konce ledna).
 
 Programy ke kontrole posílejte tehdy, kdy půjdou přeložit a nebudou
 házet žádné chybové hlášení. Dále kód musí být řádně okomentován.
