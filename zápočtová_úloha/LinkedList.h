@@ -1,4 +1,5 @@
 #pragma once
+#include <initializer_list>
 
 using T = int;
 
@@ -10,6 +11,7 @@ private:
 	Node* tail;
 public:
 	LinkedList();
+    LinkedList(std::initializer_list);
 	LinkedList(LinkedList & list);
 	~LinkedList();
 	bool empty();
@@ -49,8 +51,6 @@ class SortedLinkedList : public LinkedList
 private:
 	using LinkedList::void push_front(T data);
 	using LinkedList::void push_back(T data);
-	using LinkedList::void pop_front();
-	using LinkedList::void pop_back();
 public:
 	void insert(T data);
 };
