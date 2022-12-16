@@ -94,6 +94,8 @@ public:
 	template <typename Komparator> 
 	void setrid(Komparator porovnej)
 	{
+		sort(pole, pole + k, porovnej);
+		/*
 		unsigned int i, j, min_idx;
 		for (i = 0; i < k - 1; i++)
 		{
@@ -108,6 +110,7 @@ public:
 				pole[i] = t;
 			}
 		}
+		*/
 	}
 
 	private: 
