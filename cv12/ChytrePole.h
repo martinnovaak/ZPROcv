@@ -15,12 +15,9 @@ private:
 
 	void inicializuj(unsigned int delka) // inicializacni funkce Chytreho Pole
 	{
-		if (prazdne())
-		{
-			pole = new T[delka];
-			k = 0;
-			n = delka;
-		}
+		pole = new T[delka];
+		k = 0;
+		n = delka;
 	}   
 	void zrus() // zruseni dynamicky alokovane pameti
 	{
@@ -37,6 +34,18 @@ private:
 		delete[] pole; // stare pole smazeme
 		pole = nPole;  // ukazatel na pole zmenime na nove pole
 	}
+
+	// Pokud je delka pole podstatne mensi nez alokovane velikosti 
+	// (tradicne 1/4, ale necham na vas, co povazujete za podstatne mensi velikost)
+	// tak zmensi alokovanou velikost na polovinu (pripadne si opet muzete sami upravit velikost)
+	void zmensi_se()  // tzv shrink metoda
+	{
+		/*
+		TODO
+		*/
+	}
+	// 1 bod
+
 public:
 	ChytrePole() { inicializuj(4); } // konstruktor
 	
@@ -64,6 +73,15 @@ public:
 		k++;			 // pocet prvku se zvetsil o 1
 	}  
 	
+	// DU 12
+	void pridat_na_konec(std::initializer_list<T> ilist)
+	{
+		/*
+		TODO
+		*/
+	}
+	// 1 bod
+
 	bool prazdne() { return k == 0;}	// funkce vracejici informaci, zda-li je Chytre Pole prazdne
 	int  delka() { return k; }			// pocet prvku pole
 
@@ -85,7 +103,7 @@ public:
 	// za pouziti vlastniho komparatoru (ukazatele na funkci pro porovnani)
 	void setrid(bool (*porovnej)(T, T))
 	{
-		sort(this->begin(), this->end(), porovnej); // zavolani funke sort za vyuziti iteratoru a komparatoru
+		sort(pole, pole + k, porovnej); // zavolani funke sort za vyuziti iteratoru a komparatoru
 	}
 
 	// Ukazka vyuziti tridy komparator
@@ -112,6 +130,66 @@ public:
 		}
 		*/
 	}
+
+	// vloz na i-tou pozici prvek t
+	void vloz(T t, unsigned int i) // insert
+	{
+		/*
+		TODO
+		*/
+	}
+	// 1 bod
+
+	// Otoc poradi prvku pole
+	void otoc_pole() // reverse
+	{
+		/*
+		TODO
+		*/
+	}
+	// 0,5 bodu
+
+	// funkce, ktera vyjme i-ty prvek z ChytrehoPole
+	void odstran(unsigned int index)
+	{
+		assert(index < k); // ujisti se, ze i lezi v delce pole
+
+		// posun prvky pole o 1 doleva za i-tym prvkem
+		for (unsigned int i = index; i < k - 1; i++)
+			pole[i] = pole[i + 1];
+
+		k--; // delka Chytreho Pole se zmensila
+
+		zmensi_se(); // shrink
+	}
+
+	void odstran_posledni() 
+	{
+		assert(k > 0); // ujisti se, ze chytre pole obsahuje alespon 1 prvek
+		k--;		   // zmensi velikost pole o 1
+		zmensi_se();   // zavola metodu shrink
+	}
+
+	// najdi a vrat index, na kterem se nachazi prvek t v poli
+	// za vyuziti komparatoru
+	template <typename Komparator>
+	int najdi(T t, Komparator komp)
+	{
+		/*
+		TODO
+		*/
+		return -1; // return -1 v pripade ze se v poli prvek t nenachazi
+	}
+	// 1 bod
+
+	// uvolni pamet v poli a alokuje nove pole o zakladni velikosti
+	void vycisti()
+	{
+		/*
+		TODO
+		*/
+	}
+	// 0,5 bodu
 
 	private: 
 	class Iterator
