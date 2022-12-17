@@ -87,7 +87,8 @@ V případě použití vámi implementovaného seznamu obdržíte + další bonu
 
 -   Uložení knih ze seznamu do textového souboru <b>2b</b>
 
-Aby jste mohli dostat body musí alespoň nějak fungovat všechny 3 funkce. Tedy program musí umět knihy ze souboru načíst a alespoň nějak je seřadit do jiného souboru.
+<b>Aby jste mohli dostat body musí alespoň nějak fungovat všechny 3 funkce. Tedy program musí umět knihy ze souboru načíst a alespoň nějak je seřadit do jiného souboru.</b>
+
 Podmínky k udělení zápočtu 
 ==========================
 
